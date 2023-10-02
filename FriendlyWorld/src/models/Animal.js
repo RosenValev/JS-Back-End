@@ -20,7 +20,7 @@ const animalSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        requred: [true, 'Image is required!'],
+        required: [true, 'Image is required!'],
     },
     need: {
         type: String,
