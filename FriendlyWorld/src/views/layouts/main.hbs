@@ -25,14 +25,14 @@
             <nav>
                 <div>
                     <a href="/">Home</a>
-                    <a href="#">Dashboard</a>
-                    <a href="#">Search</a>
+                    <a href="/animals/dashboard">Dashboard</a>
+                    <a href="/animals/search">Search</a>
                 </div>
 
                 <!-- Logged-in users -->
                 {{#if isLogged}}
                 <div class="user">
-                    <a href="#">Add Animal</a>
+                    <a href="/animals/create">Add Animal</a>
                     <a href="/users/logout">Logout</a>
                 </div>
                 {{else}}
