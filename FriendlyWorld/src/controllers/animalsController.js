@@ -5,8 +5,6 @@ const { extractErrorMessage } = require('../utils/errorHelper.js');
 
 router.get('/dashboard', (req, res) => {
 
-
-
     res.render('animals/dashboard')
 });
 
@@ -32,14 +30,13 @@ router.post('/create', async (req, res) => {
             description,
             owner: req.user._id,
         });
-        console.log(name, years, kind, image, need, location, description)
-        res.redirect('/animals/dashboard')
 
+        res.redirect('/animals/dashboard')
 
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        console.log(errorMessages);
-        res.status(404).render('animals/create', { errorMessages });
+        console.log(errorMessages)
+        res.status(404).render('animals/create', { errorMessages, name, years, kind, image, need, location, description });
     }
 });
 
