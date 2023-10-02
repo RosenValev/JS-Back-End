@@ -20,10 +20,27 @@ router.post('/register', async (req, res) => {
     }
 })
 
-
 router.get('/login', (req, res) => {
     res.render('users/login');
 });
 
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    
+    try {
+        const token = await userService.login(email, password);
+        res.cookie('authorization', token);
+        res.redirect('/')
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        console.log(errorMessages);
+        res.status(404).render('users/login', { errorMessages });
+    }
+});
+
+router.get('/logout', (req, res) => {
+    res.clearCookie('authorization');
+    res.redirect('/');
+})
 
 module.exports = router;
