@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const userSchema = new mongoose.userSchema({
+const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: [true, 'Email is required'],
-        match: [/^[A-Za-z0-9]+$/, 'Email must be alphanumeric'],
+        // match: [/^[A-Za-z0-9]+$/, 'Email must be alphanumeric'],
         validate: {
             validator: async function (value) {
                 // Custom validation logic to check uniqueness

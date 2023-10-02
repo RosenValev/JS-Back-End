@@ -5,25 +5,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/styles.css" />
     <title>Home Page</title>
 </head>
 
 <body>
 
-    
-    {{!-- <div>
+    {{#each errorMessages}}
+    <div>
         <div class="errorContainer">
-            <p>Error</p>
+            <p>{{this}}</p>
         </div>
-    </div> --}}
+    </div>
+    {{/each}}
 
     <div id="wrapper">
         <header>
             <!-- Navigation -->
             <nav>
                 <div>
-                    <a href="#">Home</a>
+                    <a href="/">Home</a>
                     <a href="#">Dashboard</a>
                     <a href="#">Search</a>
                 </div>
@@ -36,8 +37,8 @@
 
                 <!-- Guest users -->
                 <div class="guest">
-                    <a href="#">Login</a>
-                    <a href="#">Register</a>
+                    <a href="/users/login">Login</a>
+                    <a href="/users/register">Register</a>
                 </div>
             </nav>
         </header>
