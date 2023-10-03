@@ -57,7 +57,7 @@ router.get('/:animalId/details', async (req, res) => {
         if ((JSON.stringify(animal.donations)).includes(userId)) {
             donated = true;
         }
-        console.log(donated)
+
         res.render('animals/details', { animal, isOwner, donated });
 
     } catch (err) {
@@ -112,17 +112,30 @@ router.get('/:animalId/donate', isAuth, async (req, res) => {
     const animalId = req.params.animalId;
     const userId = req.user?._id
 
-    const animal = await animalService.getById(animalId);
-    animal.donations.push(userId);
-    await animal.save()
-    res.redirect(`/animals/${animalId}/details`)
+    try {
+        const animal = await animalService.getById(animalId);
+        animal.donations.push(userId);
+        await animal.save()
+        res.redirect(`/animals/${animalId}/details`)
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render(`/animals/${animalId}donate`, errorMessages)
+    }
+
 });
 
 //SEARCH
-router.get('/search', (req, res) => {
-    res.render('animals/search');
+router.get('/search', async (req, res) => {
+    const { search } = req.query;
+
+    try {
+        const animals = await animalService.search(search);
+        res.render('animals/search', { animals, search });
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('/animals/search', { errorMessages })
+
+    }
 });
-
-
 
 module.exports = router; 
