@@ -11,16 +11,13 @@ router.get('/dashboard', async (req, res) => {
 
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        render('/', errorMessages);
+        render('animals/dashboard', errorMessages);
     }
-
 });
-
 
 router.get('/create', (req, res) => {
     res.render('animals/create')
 });
-
 
 router.post('/create', async (req, res) => {
     const { name, years, kind, image, need, location, description } = req.body;
@@ -50,14 +47,40 @@ router.get('/:animalId/details', async (req, res) => {
 
     try {
         const animal = await animalService.getById(animalId).lean();
-        res.render('animals/details', {animal});
+        const isOwner = req.user._id === animal.owner._id.toString();
+        res.render('animals/details', { animal, isOwner });
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
         render('animals/details', errorMessages)
     }
 });
 
+router.get('/:animalId/edit', async (req, res) => {
+    const animalId = req.params.animalId;
 
+    try {
+        const animal = await animalService.getById(animalId).lean();
+        res.render('animals/edit', { animal });
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        render('animals/edit', errorMessages)
+    }
+});
+
+
+router.post('/:animalId/edit', async (req, res) => {
+    const animalId = req.params.animalId;
+    const animalData = req.body;
+
+    try {
+        await animalService.edit(animalId, animalData);
+        res.redirect(`/animals/${animalId}/details`)
+
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        render('animals/edit', errorMessages)
+    }
+});
 
 router.get('/search', (req, res) => {
     res.render('animals/search');
