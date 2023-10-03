@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const animalService = require('../services/animalService.js')
 const { extractErrorMessage } = require('../utils/errorHelper.js');
+const { isAuth } = require('../middlewares/authorizationMiddleware.js')
 
 //DASHBOARD
 router.get('/dashboard', async (req, res) => {
@@ -39,7 +40,7 @@ router.post('/create', async (req, res) => {
 
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        render('animals/create', { errorMessages, name, years, kind, image, need, location, description });
+        res.render('animals/create', { errorMessages, name, years, kind, image, need, location, description });
     }
 });
 
@@ -49,17 +50,18 @@ router.get('/:animalId/details', async (req, res) => {
 
     try {
         const animal = await animalService.getById(animalId).lean();
-        const isOwner = req.user._id === animal.owner._id.toString();
+        const isOwner = req.user?._id === animal.owner._id.toString();
         res.render('animals/details', { animal, isOwner });
+
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        render('animals/details', errorMessages)
+        res.render('animals/details', errorMessages)
     }
 });
 
 //EDIT
 
-router.get('/:animalId/edit', async (req, res) => {
+router.get('/:animalId/edit', isAuth, async (req, res) => {
     const animalId = req.params.animalId;
 
     try {
@@ -67,11 +69,11 @@ router.get('/:animalId/edit', async (req, res) => {
         res.render('animals/edit', { animal });
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        render('animals/edit', errorMessages)
+        res.render('animals/edit', errorMessages)
     }
 });
 
-router.post('/:animalId/edit', async (req, res) => {
+router.post('/:animalId/edit', isAuth, async (req, res) => {
     const animalId = req.params.animalId;
     const animalData = req.body;
 
@@ -81,12 +83,12 @@ router.post('/:animalId/edit', async (req, res) => {
 
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        render('animals/edit', errorMessages)
+        res.render('animals/edit', errorMessages)
     }
 });
 
 //DELETE
-router.get('/:animalId/delete', async (req, res) => {
+router.get('/:animalId/delete', isAuth, async (req, res) => {
     const animalId = req.params.animalId;
     try {
         await animalService.delete(animalId)
@@ -94,7 +96,7 @@ router.get('/:animalId/delete', async (req, res) => {
 
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        render('animals/details', errorMessages)
+        res.render('animals/details', errorMessages)
     }
 });
 

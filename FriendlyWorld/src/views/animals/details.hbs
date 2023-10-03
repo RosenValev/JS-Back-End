@@ -1,7 +1,6 @@
 <main class="details">
     <!-- Details page -->
     <section id="details">
-
         <div id="details-wrapper">
             <p id="details-title">Name: {{animal.name}}</p>
             <div id="img-wrapper">
@@ -21,7 +20,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <p>Need of: <span id="details-need">{{animal.need}}</span></p>
+                            <p>Need of: <span id="details-need">{{animals.need}}</span></p>
                         </td>
                         <td>
                             <p>Location: <span id="details-location">{{animal.location}}</span></p>
@@ -32,7 +31,7 @@
             </div>
 
 
-
+            {{#if isLogged}}
             <!--Edit and Delete are only for creator-->
             <div id="action-buttons">
                 {{#if isOwner}}
@@ -43,6 +42,7 @@
                 <p id="already-donated">You already donated!</p>
                 {{/if}}
             </div>
+            {{/if}}
         </div>
 
     </section>

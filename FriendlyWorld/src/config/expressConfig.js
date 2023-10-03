@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cookieParse = require('cookie-parser');
-const { auth } = require('../middlewares.js/authorizationMiddleware.js');
+const { auth } = require('../middlewares/authorizationMiddleware.js');
 
 function ExpressConfig(app) {
     app.use(express.static(path.resolve(__dirname, '../static')));  // Configure static files folder
