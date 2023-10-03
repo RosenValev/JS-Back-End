@@ -12,7 +12,7 @@ router.get('/dashboard', async (req, res) => {
 
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        render('animals/dashboard', errorMessages);
+        res.render('animals/dashboard', errorMessages);
     }
 });
 
@@ -119,7 +119,7 @@ router.get('/:animalId/donate', isAuth, async (req, res) => {
         res.redirect(`/animals/${animalId}/details`)
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        res.render(`/animals/${animalId}donate`, errorMessages)
+        res.redirect(`/animals/${animalId}donate`, errorMessages)
     }
 
 });
@@ -133,7 +133,7 @@ router.get('/search', async (req, res) => {
         res.render('animals/search', { animals, search });
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        res.render('/animals/search', { errorMessages })
+        res.render('animals/search', { errorMessages })
 
     }
 });
