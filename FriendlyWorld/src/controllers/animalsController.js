@@ -3,12 +3,18 @@ const animalService = require('../services/animalService.js')
 const { extractErrorMessage } = require('../utils/errorHelper.js');
 
 
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', async (req, res) => {
 
-    res.render('animals/dashboard')
+    try {
+        const animals = await animalService.getAllAnimals().lean()
+        res.render('animals/dashboard', { animals });
+
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        render('/', errorMessages);
+    }
+
 });
-
-
 
 
 router.get('/create', (req, res) => {
@@ -35,10 +41,22 @@ router.post('/create', async (req, res) => {
 
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        console.log(errorMessages)
-        res.status(404).render('animals/create', { errorMessages, name, years, kind, image, need, location, description });
+        render('animals/create', { errorMessages, name, years, kind, image, need, location, description });
     }
 });
+
+router.get('/:animalId/details', async (req, res) => {
+    const animalId = req.params.animalId;
+
+    try {
+        const animal = await animalService.getById(animalId).lean();
+        res.render('animals/details', {animal});
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        render('animals/details', errorMessages)
+    }
+});
+
 
 
 router.get('/search', (req, res) => {
