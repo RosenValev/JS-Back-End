@@ -9,3 +9,5 @@ exports.getAllAnimals = () => Animal.find().populate('owner');
 exports.getById = (animalId) => Animal.findById(animalId).populate('owner');
 
 exports.edit = (animalId, animalData) => Animal.findByIdAndUpdate(animalId, animalData);
+
+exports.delete = (animalId) => Animal.findByIdAndDelete(animalId);

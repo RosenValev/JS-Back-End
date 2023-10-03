@@ -2,7 +2,7 @@ const router = require('express').Router();
 const animalService = require('../services/animalService.js')
 const { extractErrorMessage } = require('../utils/errorHelper.js');
 
-
+//DASHBOARD
 router.get('/dashboard', async (req, res) => {
 
     try {
@@ -15,6 +15,7 @@ router.get('/dashboard', async (req, res) => {
     }
 });
 
+//CREATE
 router.get('/create', (req, res) => {
     res.render('animals/create')
 });
@@ -42,6 +43,7 @@ router.post('/create', async (req, res) => {
     }
 });
 
+//DETAILS
 router.get('/:animalId/details', async (req, res) => {
     const animalId = req.params.animalId;
 
@@ -55,6 +57,8 @@ router.get('/:animalId/details', async (req, res) => {
     }
 });
 
+//EDIT
+
 router.get('/:animalId/edit', async (req, res) => {
     const animalId = req.params.animalId;
 
@@ -66,7 +70,6 @@ router.get('/:animalId/edit', async (req, res) => {
         render('animals/edit', errorMessages)
     }
 });
-
 
 router.post('/:animalId/edit', async (req, res) => {
     const animalId = req.params.animalId;
@@ -82,6 +85,20 @@ router.post('/:animalId/edit', async (req, res) => {
     }
 });
 
+//DELETE
+router.get('/:animalId/delete', async (req, res) => {
+    const animalId = req.params.animalId;
+    try {
+        await animalService.delete(animalId)
+        res.redirect('/animals/dashboard')
+
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        render('animals/details', errorMessages)
+    }
+});
+
+//SEARCH
 router.get('/search', (req, res) => {
     res.render('animals/search');
 });
