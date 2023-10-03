@@ -38,8 +38,11 @@
                 <a href="/animals/{{animal._id}}/edit" id="edit-btn">Edit</a>
                 <a href="/animals/{{animal._id}}/delete" id="delete-btn">Delete</a>
                 {{else}}
-                <a href="#" id="donation-btn">Donation</a>
+                    {{#if donated}}
                 <p id="already-donated">You already donated!</p>
+                    {{else}}
+                <a href="/animals/{{animal._id}}/donate" id="donation-btn">Donation</a>
+                    {{/if}}
                 {{/if}}
             </div>
             {{/if}}

@@ -47,11 +47,18 @@ router.post('/create', async (req, res) => {
 //DETAILS
 router.get('/:animalId/details', async (req, res) => {
     const animalId = req.params.animalId;
+    const userId = req.user?._id
+    let donated = false;
 
     try {
         const animal = await animalService.getById(animalId).lean();
         const isOwner = req.user?._id === animal.owner._id.toString();
-        res.render('animals/details', { animal, isOwner });
+
+        if ((JSON.stringify(animal.donations)).includes(userId)) {
+            donated = true;
+        }
+        console.log(donated)
+        res.render('animals/details', { animal, isOwner, donated });
 
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
@@ -98,6 +105,17 @@ router.get('/:animalId/delete', isAuth, async (req, res) => {
         const errorMessages = extractErrorMessage(err);
         res.render('animals/details', errorMessages)
     }
+});
+
+//DONATE
+router.get('/:animalId/donate', isAuth, async (req, res) => {
+    const animalId = req.params.animalId;
+    const userId = req.user?._id
+
+    const animal = await animalService.getById(animalId);
+    animal.donations.push(userId);
+    await animal.save()
+    res.redirect(`/animals/${animalId}/details`)
 });
 
 //SEARCH
