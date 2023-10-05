@@ -3,7 +3,17 @@ const bcrypt = require('bcrypt');
 const { SECRET } = require('../config/secretConfig.js');
 const jwtPromises = require('../lib/jwt.js');
 
-exports.register = (userData) => User.create(userData);
+exports.register = async (userData) => {
+    //Logic for automatic login after register
+    const user = await User.findOne({ username: userData.username });
+    if (user) {
+        throw new Error('Username already exists');
+    }
+
+    const newUser = await User.create(userData);
+    const token = generateToken(newUser);
+    return token;
+};
 
 exports.login = async (username, password) => {
     const user = await User.findOne({ username });
@@ -16,6 +26,12 @@ exports.login = async (username, password) => {
         throw new Error('Cannot find username or password');
     }
 
+    const token = await generateToken(user);
+    return token;
+};
+
+
+async function generateToken(user) {
     const payload = {
         _id: user._id,
         username: user.username,
@@ -24,6 +40,4 @@ exports.login = async (username, password) => {
 
     const token = jwtPromises.sign(payload, SECRET, { expiresIn: '2d' });
     return token;
-};
-
-
+}
