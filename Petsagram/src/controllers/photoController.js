@@ -3,8 +3,16 @@ const photoService = require('../services/photoService.js');
 const { extractErrorMessage } = require('../utils/errorHelper.js');
 
 //CATALOG
-router.get('/catalog', (req, res) => {
-    res.render('photos/catalog')
+router.get('/catalog', async (req, res) => {
+    try {
+        const photos = await photoService.getAllPhotos().lean();
+        res.render('photos/catalog', { photos });
+        console.log(photos)
+
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('photos/catalog', { errorMessages })
+    }
 });
 
 
