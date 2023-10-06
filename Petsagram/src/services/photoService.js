@@ -23,4 +23,14 @@ exports.addComment = async (photoId, comment, userId) => {
     await photo.save();
 
     return photo;
+};
+
+exports.findOwnPhotos = async (userId) => {
+    let photos = await Photo.find().populate('owner').lean();
+
+    if (userId) {
+        photos = photos.filter(photo => photo.owner._id.toString() == userId);
+    }
+
+    return photos;
 }
