@@ -70,11 +70,11 @@
                         <p class="petName">Name: {{photo.name}}</p>
                         <p class="petAge">Age: {{photo.age}}</p>
                     </div>
+
+
+                    {{#each photo.commentList}}
                     <div class="comments">
                         <div class="comments-top">
-
-
-
                             <div class="userDetails">
                                 <div class="comment-data">
                                     <div class="profilepic">
@@ -85,32 +85,31 @@
                                             </div>
                                         </div>
                                     </div>
-
-
                                     <!--User's username-->
-                                    <p><b>StevIvanov</b>- OMG where can i get one</p>
+                                    <p><b>{{this.userId}}</b> {{this.comment}}</p>
                                 </div>
                             </div>
-
-
-
                         </div>
                     </div>
-                </div>
-                {{#if isLogged}}
-                    {{#if isOwner}}
-                    
                     {{else}}
+                    {{/each}}
+
+                </div>
+
+                {{#if isLogged}}
+                {{#if isOwner}}
+
+                {{else}}
                 <div class="addComments">
                     <!-- Start Add Comments Form -->
-                    <form method="#" action="#">
-                        <textarea id="comment-textarea" name="" cols="40" rows="10"
+                    <form method="POST">
+                        <textarea id="comment-textarea" name="comment" cols="40" rows="10"
                             placeholder="Add comment..."></textarea>
                         <!-- Post Comments Button -->
                         <button type="submit">Post</button>
-                            </form>
+                    </form>
                 </div>
-                    {{/if}}
+                {{/if}}
                 {{/if}}
             </div>
         </div>

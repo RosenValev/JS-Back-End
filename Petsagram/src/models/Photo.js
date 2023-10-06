@@ -31,10 +31,7 @@ const photoSchema = new mongoose.Schema({
         maxLength: [50, 'Location must not more than 50 characters long'],
     },
     commentList: [{
-        userId: {
-            type: mongoose.Types.ObjectId,
-            ref: 'User',
-        },
+        userId: String,
         comment: String,
     }],
     owner: {

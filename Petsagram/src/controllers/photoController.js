@@ -60,6 +60,20 @@ router.get('/:photoId/details', async (req, res) => {
     }
 });
 
+router.post('/:photoId/details', async (req, res) => {
+    const photoId = req.params.photoId;
+    const { comment, ...params } = req.body
+    const userId = req.user._id;
+
+    try {
+        await photoService.addComment(photoId, comment, userId).lean()
+        res.redirect(`/photos/${photoId}/details`);
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.redirect(`/photos/${photoId}/details`);
+    }
+});
+
 
 //EDIT
 router.get('/:photoId/edit', isAuth, async (req, res) => {
@@ -69,7 +83,7 @@ router.get('/:photoId/edit', isAuth, async (req, res) => {
         const photo = await photoService.getById(photoId).lean();
         const isOwner = req.user?._id === photo.owner._id.toString();
         if (!isOwner) {
-            return res.redirect(`/photos/${photoId}/details`);
+            return res.redirect(`/photos/${photoId}/details`);   // Dont have acces if it is not the owner
         }
 
         res.render('photos/edit', { photo });
@@ -101,7 +115,7 @@ router.get('/:photoId/delete', isAuth, async (req, res) => {
     try {
         await photoService.delete(photoId);
         res.redirect('/photos/catalog');
-        
+
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
         res.redirect(`/photos/${photoId}/details`, { errorMessages });
