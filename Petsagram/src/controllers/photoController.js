@@ -50,8 +50,9 @@ router.get('/:photoId/details', async (req, res) => {
     // const userId = req.user?._id; 
 
     try {
-        const photo = await photoService.getById(photoId).lean();
+        const photo = await photoService.getById(photoId).populate('commentList.userId').lean();
         isOwner = req.user?._id === photo.owner._id.toString();
+        console.log(photo.commentList)
         res.render('photos/details', { photo, isOwner });
 
     } catch (err) {
