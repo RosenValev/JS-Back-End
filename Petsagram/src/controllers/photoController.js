@@ -67,6 +67,11 @@ router.get('/:photoId/edit', isAuth, async (req, res) => {
 
     try {
         const photo = await photoService.getById(photoId).lean();
+        const isOwner = req.user?._id === photo.owner._id.toString();
+        if (!isOwner) {
+            return res.redirect(`/photos/${photoId}/details`);
+        }
+
         res.render('photos/edit', { photo });
 
     } catch (err) {
@@ -86,6 +91,20 @@ router.post('/:photoId/edit', isAuth, async (req, res) => {
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
         res.render('photos/details', { errorMessages });
+    }
+});
+
+//DELETE
+router.get('/:photoId/delete', isAuth, async (req, res) => {
+    const photoId = req.params.photoId;
+
+    try {
+        await photoService.delete(photoId);
+        res.redirect('/photos/catalog');
+        
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.redirect(`/photos/${photoId}/details`, { errorMessages });
     }
 });
 
