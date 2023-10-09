@@ -2,14 +2,19 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-    username: {
+    firstName: {
         type: String,
-        required: [true, 'Username is required'],
-        minLength: [2, 'Username must be at least 2 characters long'],
+        required: [true, 'firstName is required'],
+        minLength: [3, 'firstName must be at least 3 characters long'],
+    },
+    lastName: {
+        type: String,
+        required: [true, 'lastName is required'],
+        minLength: [3, 'lastName must be at least 3 characters long'],
     },
     email: {
         type: String,
-        required: [true, 'Email is required'],
+        required: [true, 'email is required'],
         // match: [/^[A-Za-z0-9]+$/, 'Email must be alphanumeric'],
         validate: {
             validator: async function (value) {

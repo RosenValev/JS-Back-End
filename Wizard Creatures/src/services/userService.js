@@ -5,9 +5,9 @@ const jwtPromises = require('../lib/jwt.js');
 
 exports.register = async (userData) => {
     //Logic for automatic login after register
-    const user = await User.findOne({ username: userData.username });
+    const user = await User.findOne({ email: userData.email });
     if (user) {
-        throw new Error('Username already exists');
+        throw new Error('Email already exists');
     }
 
     const newUser = await User.create(userData);
@@ -15,15 +15,15 @@ exports.register = async (userData) => {
     return token;
 };
 
-exports.login = async (username, password) => {
-    const user = await User.findOne({ username });
-    if (!user) {
-        throw new Error('Cannot find username or password');
+exports.login = async (email, password) => {
+    const user = await User.findOne({ email });
+    if (!email) {
+        throw new Error('Cannot find email or password');
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-        throw new Error('Cannot find username or password');
+        throw new Error('Cannot find email or password');
     }
 
     const token = await generateToken(user);
@@ -34,7 +34,8 @@ exports.login = async (username, password) => {
 async function generateToken(user) {
     const payload = {
         _id: user._id,
-        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email
     }
 

@@ -9,15 +9,15 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const { username, email, password, repeatPassword } = req.body;
+    const { firstName, lastName, email, password, repeatPassword } = req.body;
 
     try {
-        const token = await userService.register({ username, email, password, repeatPassword });
+        const token = await userService.register({ firstName, lastName, email, password, repeatPassword });
         res.cookie('authorization', token);
         res.redirect('/')
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        res.render('users/register', { errorMessages, username, email });
+        res.render('users/register', { errorMessages, firstName, lastName, email });
     }
 })
 
@@ -28,15 +28,15 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        const token = await userService.login(username, password);
+        const token = await userService.login(email, password);
         res.cookie('authorization', token);
         res.redirect('/')
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        res.render('users/login', { errorMessages });
+        res.render('users/login', { errorMessages, email });
     }
 });
 

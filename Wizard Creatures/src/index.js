@@ -11,7 +11,7 @@ handlebarsConfig(app);
 
 dbConnect()
     .then(() => console.log('DB connected successfully'))
-    .catch(error => console.log('DB error : ', error));
+    .catch(error => console.log('DB error: ', error));
 
 app.use(routes);
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
