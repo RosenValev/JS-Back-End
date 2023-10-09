@@ -40,15 +40,44 @@ router.post('/create', isAuth, async (req, res) => {
 
 router.get('/:animalId/details', async (req, res) => {
     const animalId = req.params.animalId
+    const userId = req.user?._id;
+    let isVoted = false;
+    let emails = [];
 
     try {
         const animal = await animalService.getOne(animalId).lean();
         const isOwner = req.user?._id === animal.owner._id.toString();
-        res.render('animals/details', { animal, isOwner })
+
+        if (JSON.parse(JSON.stringify(animal.votes)).includes(userId)) {
+            isVoted = true;
+        }
+
+        const totalVotes = animal.votes.length;
+        const votesResult = await animalService.getVoted(animalId).lean();
+        votesResult.votes.forEach(el => emails.push(el.email));
+        const resultEmails = emails.join(', ');
+
+        res.render('animals/details', { animal, isOwner, isVoted, totalVotes, resultEmails });
 
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
         res.render('/animals/details', { errorMessages });
+    }
+});
+
+//VOTE
+
+router.get('/:animalId/vote', isAuth, async (req, res) => {
+    const animalId = req.params.animalId
+    const userId = req.user?._id;
+
+    try {
+        await animalService.vote(animalId, userId);
+        res.redirect(`/animals/${animalId}/details`);
+
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.redirect(`/animals/${animalId}/details`, { errorMessages });
     }
 });
 

@@ -33,10 +33,8 @@ const animalSchema = new mongoose.Schema({
         maxLength: [500, 'description must be no longer than 500 characters long'],
     },
     votes: [{
-        userId: {
-            type: mongoose.Types.ObjectId,
-            ref: 'User',
-        }
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
     }],
     owner: {
         type: mongoose.Types.ObjectId,
