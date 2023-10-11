@@ -13,3 +13,5 @@ exports.delete = (animalId) => Animal.findByIdAndDelete(animalId);
 exports.vote = (animalId, userId) => Animal.findByIdAndUpdate(animalId, { $push: { votes: userId } });
 
 exports.getVoted = (animalId) => Animal.findById(animalId).populate('votes');
+
+exports.getProfile = (userId) => Animal.find({ owner: userId }).populate('owner');

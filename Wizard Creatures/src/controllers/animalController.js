@@ -56,7 +56,7 @@ router.get('/:animalId/details', async (req, res) => {
         const votesResult = await animalService.getVoted(animalId).lean();
         votesResult.votes.forEach(el => emails.push(el.email));
         const resultEmails = emails.join(', ');
-
+        
         res.render('animals/details', { animal, isOwner, isVoted, totalVotes, resultEmails });
 
     } catch (err) {

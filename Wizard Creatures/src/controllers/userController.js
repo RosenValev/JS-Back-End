@@ -1,5 +1,7 @@
 const router = require('express').Router();
+const { isAuth } = require('../middlewares/authorizationMiddleware.js');
 const userService = require('../services/userService.js');
+const animalService = require('../services/animalService.js');
 const { extractErrorMessage } = require('../utils/errorHelper.js');
 
 
@@ -37,6 +39,20 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
         res.render('users/login', { errorMessages, email });
+    }
+});
+
+//PROFILE
+router.get('/profile', isAuth, async (req, res) => {
+    const userId = req.user?._id;
+
+    try {
+        const result = await animalService.getProfile(userId).lean();
+        res.render('users/my-posts', { result });
+
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('users/all-posts', { errorMessages });
     }
 });
 
