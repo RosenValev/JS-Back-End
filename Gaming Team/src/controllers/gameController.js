@@ -44,15 +44,38 @@ router.post('/create', isAuth, async (req, res) => {
 
 router.get('/:gameId/details', async (req, res) => {
     const gameId = req.params.gameId;
+    const userId = req.user?._id;
+    let isBought = false;
 
     try {
         const game = await gameService.getById(gameId).lean();
         const isOwner = req.user?._id == game.owner._id;
-        res.render('games/details', { game, isOwner });
+        console.log(isOwner)
+
+        if (JSON.parse(JSON.stringify(game.boughtBy)).includes(userId)) {
+            isBought = true;
+        }
+
+        res.render('games/details', { game, isOwner, isBought });
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
         res.render('games/details', { errorMessages });
     }
+});
+
+//BUY
+router.get('/:gameId/buy', isAuth, async (req, res) => {
+    const gameId = req.params.gameId;
+    const userId = req.user?._id;
+
+    try {
+        await gameService.buyGame(gameId, userId);
+        res.redirect(`/games/${gameId}/details`);
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.redirect(`/games/${gameId}/details`, { errorMessages });
+    }
+
 });
 
 
@@ -68,7 +91,7 @@ router.get('/:gameId/edit', isAuth, async (req, res) => {
             return res.redirect(`/games/${gameId}/details`);   // Dont have acces if it is not the owner
         }
 
-        const options = getViewPlatform(game.platform)
+        const options = getViewPlatform(game.platform);
         res.render('games/edit', { game, options });
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
@@ -100,6 +123,21 @@ router.get('/:gameId/delete', isAuth, async (req, res) => {
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
         res.redirect(`/games/${gameId}/details`, { errorMessages });
+    }
+});
+
+//SEARCH
+
+router.get('/search', isAuth, async (req, res) => {
+    const { search, platform } = req.query
+    console.log(search, platform)
+
+    try {
+        const games = await gameService.search(search, platform);
+        res.render('games/search', { games });
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('games/search', { errorMessages });
     }
 });
 
