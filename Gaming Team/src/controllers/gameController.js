@@ -5,19 +5,26 @@ const gameService = require('../services/gameService.js')
 
 
 //CATALOG
-router.get('/catalog', (req, res) => {
+router.get('/catalog', async (req, res) => {
+    try {
+        const games = await gameService.getAll().lean()
+        res.render('games/catalog', { games })
 
-    res.render('games/catalog')
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('games/catalog', { errorMessages })
+
+    }
 });
-
-
-
-
-
 
 //CREATE
 router.get('/create', isAuth, (req, res) => {
-    res.render('games/create');
+    try {
+        res.render('games/create');
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('games/create', { errorMessages });
+    }
 });
 
 router.post('/create', isAuth, async (req, res) => {
@@ -32,9 +39,20 @@ router.post('/create', isAuth, async (req, res) => {
     }
 });
 
-
-
 //DETAILS
+
+router.get('/:gameId/details', async (req, res) => {
+    const gameId = req.params.gameId;
+
+    try {
+        const game = await gameService.getById(gameId).lean();
+        const isOwner = req.user?._id == game.owner._id;
+        res.render('games/details', { game, isOwner });
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+
+    }
+});
 
 
 
