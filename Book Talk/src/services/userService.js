@@ -4,15 +4,13 @@ const { SECRET } = require('../config/secretConfig.js');
 const jwtPromises = require('../lib/jwt.js');
 
 exports.register = async (userData) => {
-    //Logic for automatic login after register
     const user = await User.findOne({ username: userData.username });
     if (user) {
         throw new Error('Username already exists');
     }
 
     const newUser = await User.create(userData);
-    const token = generateToken(newUser);
-    return token;
+    return newUser;
 };
 
 exports.login = async (username, password) => {
