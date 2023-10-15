@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const userService = require('../services/userService.js');
 const { extractErrorMessage } = require('../utils/errorHelper.js');
+const bookService = require('../services/bookService.js')
 
 
 //REGISTER
@@ -27,10 +28,10 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        const token = await userService.login(username, password);
+        const token = await userService.login(email, password);
         res.cookie('authorization', token);
         res.redirect('/')
     } catch (err) {
@@ -39,6 +40,19 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// PROFILE
+router.get('/profile', async (req, res) => {
+    const userId = req.user?._id;
+
+    try {
+        const wishedBooks = await bookService.wishedBooks(userId).lean();
+        res.render('users/profile', { wishedBooks });
+
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('users/profile', { errorMessages });
+    }
+});
 
 //LOGOUT
 router.get('/logout', (req, res) => {
