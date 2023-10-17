@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { extractErrorMessage } = require('../utils/errorHelper.js');
 
 
 router.get('/', async (req, res) => {
