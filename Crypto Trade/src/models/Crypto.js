@@ -14,6 +14,12 @@ const cryptoSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: [true, 'price is required'],
+        validate: {
+            validator: function (value) {
+                return value > 0
+            },
+            message: "price must be possitive number!"
+        },
     },
     description: {
         type: String,

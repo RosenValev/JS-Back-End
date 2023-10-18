@@ -37,14 +37,34 @@ router.post('/create', isAuth, async (req, res) => {
 router.get('/:cryptoId/details', async (req, res) => {
     const cryptoId = req.params.cryptoId;
     const userId = req.user?._id
+    let isBought = false;
 
     try {
         const crypto = await cryptoService.getById(cryptoId).lean();
         const isOwner = userId == crypto.owner._id;
-        res.render('crypto/details', { crypto, isOwner });
+
+        if (JSON.parse(JSON.stringify(crypto.buyCrypto)).includes(userId)) {
+            isBought = true;
+        }
+
+        res.render('crypto/details', { crypto, isOwner, isBought });
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
-        res.render('crypto/catalog', { errorMessages });
+        res.render('crypto/details', { errorMessages });
+    }
+});
+
+//BUY 
+router.get('/:cryptoId/buy', isAuth, async (req, res) => {
+    const cryptoId = req.params.cryptoId;
+    const userId = req.user?._id;
+
+    try {
+        await cryptoService.buyCrypto(cryptoId, userId);
+        res.redirect(`/crypto/${cryptoId}/details`);
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('crypto/details', { errorMessages });
     }
 });
 
@@ -55,7 +75,6 @@ router.get('/:cryptoId/edit', isAuth, async (req, res) => {
     try {
         const crypto = await cryptoService.getById(cryptoId).lean();
         const options = viewPaymentMethod(crypto.paymentMethod);
-        console.log(options)
         res.render('crypto/edit', { crypto, options })
     } catch (err) {
         const errorMessages = extractErrorMessage(err);
@@ -63,14 +82,44 @@ router.get('/:cryptoId/edit', isAuth, async (req, res) => {
     }
 });
 
+router.post('/:cryptoId/edit', isAuth, async (req, res) => {
+    const cryptoId = req.params.cryptoId;
+    const cryptoData = req.body;
 
-
-
-
+    try {
+        await cryptoService.edit(cryptoId, cryptoData)
+        res.redirect(`/crypto/${cryptoId}/details`)
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('crypto/edit', { errorMessages });
+    }
+});
 
 
 //DELETE
+router.get('/:cryptoId/delete', isAuth, async (req, res) => {
+    const cryptoId = req.params.cryptoId;
 
+    try {
+        await cryptoService.delete(cryptoId);
+        res.redirect('/crypto/catalog');
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render(`crypto/${cryptoId}/details`, { errorMessages });
+    }
+});
+
+//SEARCH
+router.get('/search', isAuth, async (req, res) => {
+    const { search, paymentMethod } = req.query;
+
+    try {
+        const cryptos = await cryptoService.search(search, paymentMethod);
+        res.render('crypto/search', { cryptos });
+    } catch (err) {
+        const errorMessages = extractErrorMessage(err);
+        res.render('crypto/search', { errorMessages });
+    }
+});
 
 module.exports = router;
-

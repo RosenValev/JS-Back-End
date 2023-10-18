@@ -2,7 +2,6 @@ const router = require('express').Router();
 const userService = require('../services/userService.js');
 const { extractErrorMessage } = require('../utils/errorHelper.js');
 
-
 //REGISTER
 router.get('/register', (req, res) => {
     res.render('users/register');
@@ -19,7 +18,6 @@ router.post('/register', async (req, res) => {
         res.render('users/register', { errorMessages, username, email });
     }
 })
-
 
 //LOGIN
 router.get('/login', (req, res) => {
@@ -38,7 +36,6 @@ router.post('/login', async (req, res) => {
         res.render('users/login', { errorMessages });
     }
 });
-
 
 //LOGOUT
 router.get('/logout', (req, res) => {
