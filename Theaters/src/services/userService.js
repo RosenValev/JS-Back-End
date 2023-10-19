@@ -38,5 +38,3 @@ async function generateToken(user) {
     const token = jwtPromises.sign(payload, SECRET, { expiresIn: '2d' });
     return token;
 };
-
-exports.findUser = (currentUserId) => User.find({ _id: currentUserId })

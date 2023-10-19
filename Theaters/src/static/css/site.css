@@ -50,6 +50,7 @@ nav a, footer, footer a {
     padding: 0.5em;
     color: white;
     text-transform: uppercase;
+
 }
 
 nav a:hover, footer a:hover {
@@ -58,7 +59,7 @@ nav a:hover, footer a:hover {
 }
 
 footer {
-    position: absolute;
+    position: center;
     bottom: 0;
     width: 100%;
     color: white;

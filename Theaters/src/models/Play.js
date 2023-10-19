@@ -30,6 +30,10 @@ const playSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User',
     }],
+    owner: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+    },
 });
 
 const Play = mongoose.model('Play', playSchema);

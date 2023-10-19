@@ -2,8 +2,15 @@ const Play = require('../models/Play.js');
 
 exports.create = (playData) => Play.create(playData);
 
+exports.getById = (playId) => Play.findById(playId);
 
+exports.getThreeSortedByLikes = () => Play.find({ isPublic: true }).sort({ usersLiked: -1 }).limit(3);
 
+exports.AllPublicPlays = () => Play.find({ isPublic: true }).sort({ createdAt: -1 });
+
+exports.like = (playId, userId) => {
+    return Play.findOneAndUpdate({ _id: playId, usersLiked: { $ne: userId } }, { $push: { usersLiked: userId } });
+}
 
 
 

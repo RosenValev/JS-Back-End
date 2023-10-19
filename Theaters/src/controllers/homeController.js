@@ -1,15 +1,16 @@
 const router = require('express').Router();
-const userService = require('../services/userService.js');
+const playService = require('../services/playService.js')
 
 
 router.get('/', async (req, res) => {
-    const currentUserId = req.user?._id;
-    const isRegisteredUser = await userService.findUser(currentUserId).lean();
+    let plays;
 
-    if (isRegisteredUser.length !== 0) {
-        res.render('user-home');
+    if (req.user) {
+        plays = await playService.AllPublicPlays().lean();
+        res.render('user-home', { plays });
     } else {
-        res.render('guest-home')
+        plays = await playService.getThreeSortedByLikes().lean();
+        res.render('guest-home', { plays })
     }
 })
 
