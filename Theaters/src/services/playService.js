@@ -10,9 +10,20 @@ exports.AllPublicPlays = () => Play.find({ isPublic: true }).sort({ createdAt: -
 
 exports.like = (playId, userId) => {
     return Play.findOneAndUpdate({ _id: playId, usersLiked: { $ne: userId } }, { $push: { usersLiked: userId } });
-}
+};
+
+exports.edit = (playId, playData) => Play.findByIdAndUpdate(playId, playData);
+
+exports.delete = (playId) => Play.findByIdAndDelete(playId);
+
+exports.sortedByDate = () => Play.find().sort({ createdAt: 1 });
+
+exports.sortLikes = () => Play.find().sort({ usersLiked: 1 })
 
 
+
+
+// Play.find({ $sortArray: { input: usersLiked, sortBy: 1 } })   не стана
 
 
 // exports.getAll = () => Book.find().populate('owner');
