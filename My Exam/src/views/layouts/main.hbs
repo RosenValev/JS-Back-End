@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Starts Head Section -->
 
 <head>
+    <meta charset="UTF-8">
+    <title>Second Hand Electronics</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="icon" type="image/x-icon" href="/images/free-30-instagram-stories-icons23_122570.png">
-    <title>Petstagram</title>
 </head>
 
-<!-- Starts Body Section -->
-
 <body>
-
+    <!-- In case of error, you should display div with class "errorContainer" -->
+    <!-- You can choose to display the first error or all of them (error message/s in your opinion) -->
     {{#each errorMessages}}
     <div>
         <div class="errorContainer">
@@ -20,82 +18,30 @@
     </div>
     {{/each}}
 
-    <header>
-        <nav class="navbar">
-            <div class="container">
-                <div class="logo">
-                    <!-- Link to Home Page -->
-                    <a href="/">
-                        <img width="50px" src="/images/free-30-instagram-stories-icons23_122570.png" alt="img1">
-                    </a>
-                    <!-- Link to Home Page -->
-                    <a class="home" href="/">
-                        <i>Petstagram</i>
-                    </a>
-                </div>
+    <div id="container">
 
-                <div class="nav-links">
-                    <ul class="nav-group">
-                        <li class="nav-item">
-                            <!-- Link to Catalog Page -->
-                            <a href="#">
-                                <i>Catalog</i>
-                            </a>
-                        </li>
+        <nav>
+            <ul>
+                <!--For all users-->
+                <li><a href="/">Home</a></li>
+                <li><a href="/electronics/catalog">Catalog</a></li>
+                <!--For loggin users-->
+                {{#if isLogged}}
+                <li><a href="/electronics/create">Create Offer</a></li>
+                <li><a href="/users/search">Search</a></li>
+                <li><a href="/users/logout">Logout</a></li>
+                <!--For guest user-->
+                {{else}}
+                <li><a href="/users/login">Login</a></li>
+                <li><a href="/users/register">Register</a></li>
+                {{/if}}
+            </ul>
 
-                        {{#if isLogged}}
-                        <!--For login users-->
-                        <li class="nav-item">
-                            <!-- Link to Add Photo Page -->
-                            <a href="#">
-                                <i>Add Photo</i>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <!-- Link to Profile Page -->
-                            <a href="#">
-                                <i>Profile</i>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <!-- Link to Logout Page -->
-                            <a href="/users/logout">
-                                <i>Logout</i>
-                            </a>
-                        </li>
-
-                        {{else}}
-                        <!--For Guest User-->
-                        <li class="nav-item">
-                            <!-- Link to Login Page -->
-                            <a href="/users/login">
-                                <i>Login</i>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <!-- Link to Register Page -->
-                            <a href="/users/register">
-                                <i>Register</i>
-                            </a>
-                        </li>
-                        {{/if}}
-
-                    </ul>
-                </div>
-            </div>
         </nav>
-    </header>
 
+        {{{body}}}
 
-    {{{body}}}
-
-    <!-- Starts Footer Section -->
-    <div class="footer">
-        <span class="footer-section">
-            © 2023 SoftUni Back-End Exam
-        </span>
+        <footer>@SoftUni - JS Back-End - Second Hand Electronics 2023</footer>
     </div>
 
 </body>

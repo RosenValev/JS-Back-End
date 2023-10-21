@@ -5,12 +5,11 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: [true, 'Username is required'],
-        minLength: [2, 'Username must be at least 2 characters long'],
+        minLength: [3, 'Username must be at least 3 characters long'],
     },
     email: {
         type: String,
         required: [true, 'Email is required'],
-        // match: [/^[A-Za-z0-9]+$/, 'Email must be alphanumeric'],
         validate: {
             validator: async function (value) {
                 // Custom validation logic to check uniqueness
