@@ -1,2 +1,2 @@
 # JS-Back-End-
-Some exam preps
+This repo contains some of the exam preparation for the module JS Web
